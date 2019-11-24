@@ -1,11 +1,11 @@
-from typing import Dict
+from typing import Dict, Union
 from vk_tool import vk, USER_FIELDS
 from copy import deepcopy
 
 
 class User:
     def __init__(self, dict: Dict):
-        self.id = int(dict['id'])
+        self.id = dict['id']
         del dict['id']
         self.properties = deepcopy(dict)
 
@@ -13,11 +13,15 @@ class User:
         return hash(self.id)
 
     @staticmethod
-    def new_from_id(id: str):
-        response = vk.method('users.get', values={
+    def new_from_id(id: Union[str, int]):
+        if isinstance(id, str):
+            if id.count(',') > 0:
+                raise ValueError('One user id expected, More than one received instead.')
+        values = {
             'fields': USER_FIELDS,
             'name_case': 'Nom',
-            'user_id': id,
-        })
-        return User(response)
+            'user_ids': id,
+        }
+        user_dict = vk.method('users.get', values=values)[0]
+        return User(user_dict)
 
