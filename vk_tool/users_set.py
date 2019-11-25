@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Set, Union
 from vk_tool import vk, USER_FIELDS
 from vk_tool.user import User
 
@@ -25,8 +25,21 @@ class UsersSet:
         return UsersSet(friends)
 
     @staticmethod
-    def new_from_community_subscribers(public):
-        pass
+    def new_from_group_members(group_id: Union[int, str]):
+        response = vk.method('groups.getMembers', values={
+            'group_id': group_id
+        })
+        members = set(
+            map(
+                lambda user_dict: User(user_dict),
+                vk.method('users.get', values={
+                    'user_ids': ','.join(map(str, response['items'])),
+                    'fields': USER_FIELDS,
+                    'name_case': 'Nom',
+                })
+            )
+        )
+        return UsersSet(members)
 
     def __repr__(self):
         return self.s.__repr__()
