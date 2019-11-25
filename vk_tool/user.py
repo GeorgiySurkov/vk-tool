@@ -11,6 +11,12 @@ class User:
 
     def __hash__(self):
         return hash(self.id)
+    
+    def __eq__(self, other):
+        if isinstance(other, User):
+            return self.id == other.id
+        else:
+            return False
 
     @staticmethod
     def new_from_id(id: Union[str, int]):
