@@ -18,6 +18,9 @@ class User:
         else:
             return False
 
+    def __repr__(self):
+        return f'<User: {self.id}, {self.properties["first_name"]} {self.properties["second_name"]}>'
+
     @staticmethod
     def new_from_id(id: Union[str, int]):
         if isinstance(id, str):

@@ -41,5 +41,3 @@ class UsersSet:
         )
         return UsersSet(members)
 
-    def __repr__(self):
-        return self.s.__repr__()
