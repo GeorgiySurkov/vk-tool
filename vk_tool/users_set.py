@@ -9,6 +9,11 @@ class UsersSet:
 
     @staticmethod
     def new_from_user_friends(user: User):
+        """
+        Create UsersSet instance from 
+        User friends via 'friends.get'
+        vk api method
+        """
         response = vk.method('friends.get', values={
             'user_id': user.id,
         })
@@ -26,6 +31,11 @@ class UsersSet:
 
     @staticmethod
     def new_from_group_members(group_id: Union[int, str]):
+        """
+        Create UsersSet instance from
+        Group members via 'grups.getMembers'
+        vk api method
+        """
         response = vk.method('groups.getMembers', values={
             'group_id': group_id
         })
