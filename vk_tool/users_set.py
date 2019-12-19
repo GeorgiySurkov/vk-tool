@@ -50,3 +50,39 @@ class UsersSet:
             )
         )
         return UsersSet(members)
+
+    # set operations
+    def __eq__(self, other):
+        if isinstance(other, UsersSet):
+            return self.s.__eq__(other.s)
+        else:
+            raise TypeError('Other should be UsersSet type')
+
+    def __contains__(self, item):
+        if isinstance(item, UsersSet):
+            return self.s.__contains__(item.s)
+        elif isinstance(item, User):
+            return self.s.__contains__(User)
+        else:
+            raise TypeError('in operator is not defined for this type')
+
+    def __or__(self, other):
+        if isinstance(other, UsersSet):
+            return self.s.__or__(other.s)
+        else:
+            raise TypeError('')
+
+    def __and__(self, other):
+        if isinstance(other, UsersSet):
+            return self.s.__and__(other.s)
+        else:
+            raise TypeError('not defined for this type')
+
+    def __sub__(self, other):
+        if isinstance(other, UsersSet):
+            return self.s.__sub__(other.s)
+        else:
+            raise TypeError('not defined for this type')
+
+    def filter(self, func):
+        return set(filter(func, self.s))
