@@ -33,7 +33,7 @@ class UsersSet:
     def new_from_group_members(group_id: Union[int, str]):
         """
         Create UsersSet instance from
-        Group members via 'grups.getMembers'
+        Group members via 'groups.getMembers'
         vk api method
         """
         response = vk.method('groups.getMembers', values={
@@ -50,4 +50,3 @@ class UsersSet:
             )
         )
         return UsersSet(members)
-
