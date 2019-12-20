@@ -68,21 +68,21 @@ class UsersSet:
 
     def __or__(self, other):
         if isinstance(other, UsersSet):
-            return self.s.__or__(other.s)
+            return UsersSet(self.s.__or__(other.s))
         else:
             raise TypeError('')
 
     def __and__(self, other):
         if isinstance(other, UsersSet):
-            return self.s.__and__(other.s)
+            return UsersSet(self.s.__and__(other.s))
         else:
             raise TypeError('not defined for this type')
 
     def __sub__(self, other):
         if isinstance(other, UsersSet):
-            return self.s.__sub__(other.s)
+            return UsersSet(self.s.__sub__(other.s))
         else:
             raise TypeError('not defined for this type')
 
     def filter(self, func):
-        return set(filter(func, self.s))
+        return UsersSet(set(filter(func, self.s)))
