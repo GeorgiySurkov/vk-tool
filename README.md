@@ -1,4 +1,4 @@
-VK TOOL
+# VK TOOL
 
 ### Запуск
 1. `git clone https://github.com/GeorgiySurkov/vk_tool.git <dir_name>`
