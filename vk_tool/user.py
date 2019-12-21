@@ -6,8 +6,8 @@ from copy import deepcopy
 class User:
     def __init__(self, properties_dict: Dict):
         self.id = properties_dict['id']
-        del properties_dict['id']
-        self.properties = deepcopy(properties_dict)
+        self.first_name = properties_dict['first_name']
+        self.last_name = properties_dict['last_name']
 
     def __hash__(self):
         return hash(self.id)
@@ -19,7 +19,7 @@ class User:
             return False
 
     def __repr__(self):
-        return f'<User: {self.id}, {self.properties["first_name"]} {self.properties["second_name"]}>'
+        return f'<User: {self.id}, {self.first_name} {self.last_name}>'
 
     @staticmethod
     def new_from_id(user_id: Union[str, int]):
