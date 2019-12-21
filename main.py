@@ -253,9 +253,9 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def setup_table(self):
         self.tableWidget.setColumnCount(3)
         self.tableWidget.setHorizontalHeaderLabels(('id', 'Имя', 'Фамилия'))
-        self.tableWidget.setColumnWidth(0, 89)
-        self.tableWidget.setColumnWidth(1, 246)
-        self.tableWidget.setColumnWidth(2, 246)
+        self.tableWidget.setColumnWidth(0, 90)
+        self.tableWidget.setColumnWidth(1, 220)
+        self.tableWidget.setColumnWidth(2, 220)
         self.clear_table()
 
     def load_table(self, u_set_name):
