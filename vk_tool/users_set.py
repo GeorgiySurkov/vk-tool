@@ -20,16 +20,15 @@ class UsersSet:
         response = vk.method('friends.get', values={
             'user_id': user.id,
         })
-        friends = set(
-            map(
-                lambda user_dict: User(user_dict), 
-                vk.method('users.get', values={
-                    'user_ids': ','.join(map(str, response['items'])),
-                    'fields': USER_FIELDS,
-                    'name_case': 'Nom',
-                }),
-            )
-        )
+        friends = set()
+        friends |= UsersSet._get_users(response['items'])
+        n = -(-response['count'] // 1000) * 1000
+        for offset in range(1000, n + 1, 1000):
+            response = vk.method('friends.get', values={
+                'user_id': user.id,
+                'offset': offset
+            })
+            friends |= UsersSet._get_users(response['items'])
         return UsersSet(friends)
 
     @staticmethod
@@ -42,17 +41,55 @@ class UsersSet:
         response = vk.method('groups.getMembers', values={
             'group_id': group_id
         })
-        members = set(
-            map(
-                lambda user_dict: User(user_dict),
-                vk.method('users.get', values={
-                    'user_ids': ','.join(map(str, response['items'])),
-                    'fields': USER_FIELDS,
-                    'name_case': 'Nom',
-                })
-            )
-        )
+        members = set()
+        members |= UsersSet._get_users(response['items'])
+        n = -(-response['count'] // 1000) * 1000 + 1
+        for offset in range(1000, n, 1000):
+            response = vk.method('groups.getMembers', values={
+                'group_id': group_id,
+                'offset': offset
+            })
+            members |= UsersSet._get_users(response['items'])
         return UsersSet(members)
+
+    @staticmethod
+    def _get_users(users_ids):
+        members = set()
+
+        # split request in 2 parts because vk sometimes can't handle request for 1000 users
+        if len(users_ids) <= 500:
+            members |= set(
+                map(
+                    lambda user_dict: User(user_dict),
+                    vk.method('users.get', values={
+                        'user_ids': ','.join(map(str, users_ids)),
+                        'fields': USER_FIELDS,
+                        'name_case': 'Nom',
+                    })
+                )
+            )
+        else:
+            members |= set(
+                map(
+                    lambda user_dict: User(user_dict),
+                    vk.method('users.get', values={
+                        'user_ids': ','.join(map(str, users_ids[:500])),
+                        'fields': USER_FIELDS,
+                        'name_case': 'Nom',
+                    })
+                )
+            )
+            members |= set(
+                map(
+                    lambda user_dict: User(user_dict),
+                    vk.method('users.get', values={
+                        'user_ids': ','.join(map(str, users_ids[500:])),
+                        'fields': USER_FIELDS,
+                        'name_case': 'Nom',
+                    })
+                )
+            )
+        return members
 
     # set operations
     def __eq__(self, other):
@@ -63,9 +100,9 @@ class UsersSet:
 
     def __contains__(self, item):
         if isinstance(item, UsersSet):
-            return self.s.__contains__(item.s)
+            return item.s in self.s
         elif isinstance(item, User):
-            return self.s.__contains__(User)
+            return item in self.s
         else:
             raise TypeError('in operator is not defined for this type')
 
