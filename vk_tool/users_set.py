@@ -7,6 +7,9 @@ class UsersSet:
     def __init__(self, s: Set[User]):
         self.s = s
 
+    def __repr__(self):
+        return f'<UsersSet:{len(self.s)}>'
+
     @staticmethod
     def new_from_user_friends(user: User):
         """
