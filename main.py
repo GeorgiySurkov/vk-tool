@@ -37,6 +37,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.sets = OrderedDict()
+        self.setup_table()
         # operations buttons clicked functions
         self.new_set_btn.clicked.connect(self.on_click_new_set_btn)
         self.new_set_from_user_friends.clicked.connect(self.on_click_new_set_from_user_friends_btn)
@@ -97,6 +98,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.new_set_from_user_friends.setEnabled(True)
             self.new_set_from_community_followers.setEnabled(True)
 
+            self.clear_table()
             self.hide_assign_set(False)
             self.equation_mark.setVisible(False)
             self.hide_first_set(False)
@@ -120,6 +122,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.new_set_from_user_friends.setEnabled(False)
             self.new_set_from_community_followers.setEnabled(False)
 
+            self.load_table(self.selected_assign_set)
             self.assign_set_btn.setText(self.selected_assign_set)
             self.sets[self.selected_assign_set][0].setEnabled(False)
             self.hide_assign_set(True)
@@ -144,6 +147,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.new_set_from_user_friends.setEnabled(False)
             self.new_set_from_community_followers.setEnabled(False)
 
+            self.load_table(self.selected_assign_set)
             self.hide_assign_set(True)
             self.equation_mark.setVisible(True)
             self.now_operation_label.setVisible(False)
@@ -167,6 +171,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.new_set_from_user_friends.setEnabled(False)
             self.new_set_from_community_followers.setEnabled(False)
 
+            self.load_table(self.selected_assign_set)
             self.hide_assign_set(True)
             self.equation_mark.setVisible(True)
             self.now_operation_label.setText(OPERATIONS_SYMBOLS[self.selected_operation])
@@ -190,6 +195,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.new_set_from_user_friends.setEnabled(False)
             self.new_set_from_community_followers.setEnabled(False)
 
+            self.load_table(self.selected_assign_set)
             self.hide_assign_set(True)
             self.equation_mark.setVisible(True)
             self.now_operation_label.setVisible(True)
@@ -213,6 +219,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.new_set_from_user_friends.setEnabled(False)
             self.new_set_from_community_followers.setEnabled(False)
 
+            self.load_table(self.selected_assign_set)
             self.hide_assign_set(True)
             self.equation_mark.setVisible(True)
             self.now_operation_label.setVisible(True)
@@ -242,6 +249,30 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.set_state(SELECTED_FIRST_SET, selected_set=clicked_btn.text())
         elif self.state == SELECTED_FIRST_SET:
             self.set_state(SELECTED_SECOND_SET, selected_set=clicked_btn.text())
+
+    def setup_table(self):
+        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setHorizontalHeaderLabels(('id', 'Имя', 'Фамилия'))
+        self.tableWidget.setColumnWidth(0, 89)
+        self.tableWidget.setColumnWidth(1, 246)
+        self.tableWidget.setColumnWidth(2, 246)
+        self.clear_table()
+
+    def load_table(self, u_set_name):
+        self.set_elements_label.setText(f'Элементы множества "{u_set_name}"')
+        u_set = self.sets[u_set_name][1]
+        for i, user in enumerate(u_set):
+            self.tableWidget.setRowCount(self.tableWidget.rowCount() + 1)
+            self.tableWidget.setItem(i, 0, QtWidgets.QTableWidgetItem(str(user.id)))
+            self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem(user.first_name))
+            self.tableWidget.setItem(i, 2, QtWidgets.QTableWidgetItem(user.last_name))
+        print(self.tableWidget.columnWidth(0))
+        print(self.tableWidget.columnWidth(1))
+        print(self.tableWidget.columnWidth(2))
+
+    def clear_table(self):
+        self.set_elements_label.setText('No set selected')
+        self.tableWidget.setRowCount(0)
 
     def update_set_list(self):
         for i in reversed(range(self.gridLayout.count())):

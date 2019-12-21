@@ -91,6 +91,9 @@ class UsersSet:
             )
         return members
 
+    def __iter__(self):
+        return iter(self.s)
+
     # set operations
     def __eq__(self, other):
         if isinstance(other, UsersSet):
