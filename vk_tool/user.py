@@ -1,6 +1,5 @@
 from typing import Dict, Union
 from vk_tool import vk, USER_FIELDS
-from copy import deepcopy
 
 
 class User:

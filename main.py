@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 from vk_tool.users_set import UsersSet
 from vk_tool.user import User
 
+# dict to get operation symbol for label
 OPERATIONS_SYMBOLS = {
     'union': 'OR',
     'intersection': 'AND',
@@ -22,7 +23,7 @@ OPERATIONS_FUNCS = {
 
 ENTER_KEY_CODE = 16777220
 
-# APPLICATION STATES
+# application states
 NOTHING_SELECTED = 0
 SELECTED_ASSIGN_SET = 1
 SELECTED_OPERATION = 6
@@ -36,8 +37,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.sets = OrderedDict()
         self.setup_table()
+
         # operations buttons clicked functions
         self.new_set_btn.clicked.connect(self.on_click_new_set_btn)
         self.new_set_from_user_friends.clicked.connect(self.on_click_new_set_from_user_friends_btn)
@@ -52,6 +53,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.first_set_btn.clicked.connect(self.on_click_first_set_btn)
         self.second_set_btn.clicked.connect(self.on_click_second_set_btn)
 
+        self.sets = OrderedDict()
         self.state = None
         self.selected_assign_set = None
         self.selected_first_set = None
@@ -59,9 +61,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.selected_operation = None
         self.set_state(NOTHING_SELECTED)
 
-        # for i in range(5):
-        #     self.gridLayout.addWidget(QtWidgets.QPushButton(), i, 0)
-
+    # functions connected to current expression sets
     def on_click_assign_set_btn(self):
         self.sets[self.selected_assign_set][0].setEnabled(True)
         if self.selected_first_set is not None:
@@ -81,6 +81,18 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.set_state(SELECTED_FIRST_SET)
 
     def set_state(self, state, **kwargs):
+        """
+        Method to change global application state.
+        System with states inspired by react.js
+        states:
+            NOTHING_SELECTED
+            SELECTED_ASSIGN_SET
+            WAITING_FOR_OPERATION_CHOICE
+            SELECTED_OPERATION
+            SELECTED_FIRST_SET
+            SELECTED_SECOND_SET
+            WAITING_FOR_CONFIRM
+        """
         if state == NOTHING_SELECTED:
             self.state = state
             self.selected_assign_set = None
@@ -251,6 +263,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.set_state(SELECTED_SECOND_SET, selected_set=clicked_btn.text())
 
     def setup_table(self):
+
         self.tableWidget.setColumnCount(3)
         self.tableWidget.setHorizontalHeaderLabels(('id', 'Имя', 'Фамилия'))
         self.tableWidget.setColumnWidth(0, 90)
@@ -258,6 +271,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.tableWidget.setColumnWidth(2, 220)
         self.clear_table()
 
+    # functions to operate with table
     def load_table(self, u_set_name):
         self.set_elements_label.setText(f'Элементы множества "{u_set_name}"')
         u_set = self.sets[u_set_name][1]
@@ -294,6 +308,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                 self.sets[self.selected_second_set][0].setEnabled(True)
                 self.set_state(NOTHING_SELECTED)
 
+    # functions connected to operation buttons
     def on_click_new_set_btn(self):
         name, ok_btn_pressed = QtWidgets.QInputDialog.getText(
             self,
