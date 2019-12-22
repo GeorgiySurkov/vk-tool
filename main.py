@@ -266,9 +266,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.tableWidget.setItem(i, 0, QtWidgets.QTableWidgetItem(str(user.id)))
             self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem(user.first_name))
             self.tableWidget.setItem(i, 2, QtWidgets.QTableWidgetItem(user.last_name))
-        print(self.tableWidget.columnWidth(0))
-        print(self.tableWidget.columnWidth(1))
-        print(self.tableWidget.columnWidth(2))
 
     def clear_table(self):
         self.set_elements_label.setText('No set selected')
