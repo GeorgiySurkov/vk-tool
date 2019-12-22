@@ -282,7 +282,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.tableWidget.setItem(i, 2, QtWidgets.QTableWidgetItem(user.last_name))
 
     def clear_table(self):
-        self.set_elements_label.setText('No set selected')
+        self.set_elements_label.setText('Ни одно множество не выбрано')
         self.tableWidget.setRowCount(0)
 
     def update_set_list(self):
